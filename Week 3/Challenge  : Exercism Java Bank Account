@@ -1,1 +1,59 @@
 
+class BankAccount {
+
+    private int balance = 0;
+    private boolean accountOpen = false;
+
+    public synchronized void open() {
+        if (accountOpen) {
+            throw new IllegalStateException("Account already open");
+        }
+
+        balance = 0;
+        accountOpen = true;
+    }
+
+    public synchronized void close() {
+        if (!accountOpen) {
+            throw new IllegalStateException("Account is closed");
+        }
+
+        accountOpen = false;
+    }
+
+    public synchronized int getBalance() {
+        if (!accountOpen) {
+            throw new IllegalStateException("Account is closed");
+        }
+
+        return balance;
+    }
+
+    public synchronized void deposit(int amount) {
+        if (!accountOpen) {
+            throw new IllegalStateException("Account is closed");
+        }
+
+        if (amount < 0) {
+            throw new IllegalArgumentException("Cannot deposit negative amount");
+        }
+
+        balance = balance + amount;
+    }
+
+    public synchronized void withdraw(int amount) {
+        if (!accountOpen) {
+            throw new IllegalStateException("Account is closed");
+        }
+
+        if (amount < 0) {
+            throw new IllegalArgumentException("Cannot withdraw negative amount");
+        }
+
+        if (amount > balance) {
+            throw new IllegalArgumentException("Insufficient balance");
+        }
+
+        balance = balance - amount;
+    }
+}
